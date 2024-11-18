@@ -1,0 +1,34 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: kgbbot
+app: kgb-telegram-bot
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: telegram-bot-http
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: ap-south-1
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - httpApi:
+          path: /
+          method: get
+  webhook:
+    handler: handler.handle_webhook
+    events:
+      - httpApi:
+          path: /webhook
+          method: post
+
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    port: 3000
+    host: 0.0.0.0
+    stage: dev
